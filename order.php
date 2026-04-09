@@ -1,4 +1,18 @@
-<?php include('partials-front/menu.php'); ?>
+<?php 
+// Start output buffering to prevent header issues
+ob_start();
+
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+include('partials-front/menu.php');
+
+// Check if connection exists
+if(!isset($conn)) {
+    die("Database connection not established");
+}
+?>
 
 <style>
     /* Main Content Area Adjustments */
@@ -14,48 +28,33 @@
         margin-left: 80px;
     }
 
-    /* Container Adjustments */
     .container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 0 20px;
     }
 
-    /* Page Header */
     .page-header {
         text-align: center;
         margin-bottom: 40px;
-        position: relative;
     }
 
     .page-header h1 {
         font-size: 42px;
         color: #333;
         margin-bottom: 15px;
-        position: relative;
-        display: inline-block;
     }
 
     .page-header h1::after {
         content: '';
-        position: absolute;
-        bottom: -10px;
-        left: 50%;
-        transform: translateX(-50%);
+        display: block;
         width: 100px;
         height: 4px;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        margin: 10px auto 0;
         border-radius: 2px;
     }
 
-    .page-header p {
-        color: #666;
-        font-size: 18px;
-        max-width: 600px;
-        margin: 0 auto;
-    }
-
-    /* Order Form Container */
     .order-container {
         display: grid;
         grid-template-columns: 1fr 1.5fr;
@@ -63,7 +62,6 @@
         margin: 40px 0;
     }
 
-    /* Order Summary Card */
     .order-summary {
         background: white;
         border-radius: 20px;
@@ -71,50 +69,23 @@
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
         position: sticky;
         top: 20px;
-        height: fit-content;
-        animation: slideInLeft 0.6s ease;
-    }
-
-    @keyframes slideInLeft {
-        from {
-            opacity: 0;
-            transform: translateX(-30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
     }
 
     .summary-title {
         font-size: 24px;
         color: #333;
         margin-bottom: 25px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
         padding-bottom: 15px;
         border-bottom: 2px solid #f0f0f0;
     }
 
-    .summary-title i {
-        color: #667eea;
-    }
-
-    /* Food Item Card */
     .food-item-card {
         display: flex;
         gap: 20px;
-        margin-bottom: 25px;
         padding: 15px;
         background: #f8f9ff;
         border-radius: 15px;
-        transition: 0.3s;
-    }
-
-    .food-item-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.1);
+        margin-bottom: 25px;
     }
 
     .food-image {
@@ -122,22 +93,12 @@
         height: 120px;
         border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     }
 
     .food-image img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: 0.5s;
-    }
-
-    .food-item-card:hover .food-image img {
-        transform: scale(1.1);
-    }
-
-    .food-details {
-        flex: 1;
     }
 
     .food-details h3 {
@@ -153,26 +114,11 @@
         margin-bottom: 15px;
     }
 
-    .food-price small {
-        font-size: 14px;
-        color: #999;
-        font-weight: normal;
-    }
-
-    /* Quantity Selector */
     .quantity-selector {
         display: flex;
         align-items: center;
         gap: 15px;
         margin-top: 15px;
-    }
-
-    .quantity-label {
-        color: #666;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        gap: 5px;
     }
 
     .quantity-controls {
@@ -192,11 +138,6 @@
         border: none;
         cursor: pointer;
         font-size: 18px;
-        transition: 0.3s;
-    }
-
-    .qty-btn:hover {
-        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
     }
 
     .qty-input {
@@ -210,7 +151,6 @@
         outline: none;
     }
 
-    /* Price Breakdown */
     .price-breakdown {
         background: #f8f9ff;
         border-radius: 15px;
@@ -238,68 +178,30 @@
         color: #667eea;
     }
 
-    /* Delivery Form */
     .delivery-form {
         background: white;
         border-radius: 20px;
         padding: 30px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        animation: slideInRight 0.6s ease;
-    }
-
-    @keyframes slideInRight {
-        from {
-            opacity: 0;
-            transform: translateX(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
     }
 
     .form-title {
         font-size: 24px;
         color: #333;
         margin-bottom: 25px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
         padding-bottom: 15px;
         border-bottom: 2px solid #f0f0f0;
-    }
-
-    .form-title i {
-        color: #667eea;
-    }
-
-    /* Form Grid */
-    .form-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
     }
 
     .form-group {
         margin-bottom: 20px;
     }
 
-    .form-group.full-width {
-        grid-column: span 2;
-    }
-
     .form-group label {
-        display: flex;
-        align-items: center;
-        gap: 8px;
+        display: block;
         color: #333;
         font-weight: 500;
         margin-bottom: 8px;
-    }
-
-    .form-group label i {
-        color: #667eea;
-        font-size: 16px;
     }
 
     .form-control {
@@ -309,25 +211,13 @@
         border-radius: 12px;
         font-size: 16px;
         transition: 0.3s;
-        background: white;
     }
 
     .form-control:focus {
         outline: none;
         border-color: #667eea;
-        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
     }
 
-    .form-control:hover {
-        border-color: #764ba2;
-    }
-
-    textarea.form-control {
-        resize: vertical;
-        min-height: 120px;
-    }
-
-    /* Confirm Order Button */
     .confirm-btn {
         width: 100%;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -338,12 +228,8 @@
         font-size: 18px;
         font-weight: 600;
         cursor: pointer;
-        transition: 0.3s;
         margin-top: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
+        transition: 0.3s;
     }
 
     .confirm-btn:hover {
@@ -351,174 +237,133 @@
         box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
     }
 
-    .confirm-btn i {
-        font-size: 20px;
-    }
-
-    /* Security Badge */
-    .security-badge {
-        display: flex;
-        align-items: center;
-        gap: 10px;
+    .debug-info {
         background: #f8f9ff;
+        border-left: 4px solid #667eea;
         padding: 15px;
-        border-radius: 10px;
-        margin-top: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+        font-family: monospace;
+        font-size: 12px;
+        overflow-x: auto;
     }
 
-    .security-badge i {
-        color: #28a745;
-        font-size: 24px;
+    .debug-info pre {
+        margin: 0;
+        white-space: pre-wrap;
     }
 
-    .security-badge p {
-        color: #666;
-        font-size: 13px;
-        line-height: 1.5;
-    }
-
-    /* Error Message */
     .error-message {
         background: #f8d7da;
         color: #721c24;
-        padding: 15px 20px;
+        padding: 15px;
         border-radius: 10px;
         margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
         border-left: 4px solid #dc3545;
     }
 
-    .error-message i {
-        font-size: 20px;
+    .success-message {
+        background: #d4edda;
+        color: #155724;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border-left: 4px solid #28a745;
     }
 
-    /* Responsive Design */
     @media (max-width: 992px) {
         .order-container {
             grid-template-columns: 1fr;
         }
-
         .order-summary {
             position: static;
+        }
+        .main-content {
+            margin-left: 0;
         }
     }
 
     @media (max-width: 768px) {
-        .main-content {
-            margin-left: 0;
-        }
-
-        .page-header h1 {
-            font-size: 32px;
-        }
-
-        .form-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .form-group.full-width {
-            grid-column: span 1;
-        }
-
         .food-item-card {
             flex-direction: column;
             align-items: center;
             text-align: center;
         }
-
-        .food-image {
-            width: 150px;
-            height: 150px;
-        }
-
         .quantity-selector {
             justify-content: center;
         }
-    }
-
-    /* Loading State */
-    .btn-loading {
-        position: relative;
-        pointer-events: none;
-        opacity: 0.7;
-    }
-
-    .btn-loading::after {
-        content: '';
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        border: 2px solid white;
-        border-top-color: transparent;
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-        to { transform: rotate(360deg); }
+        .page-header h1 {
+            font-size: 32px;
+        }
     }
 </style>
 
-<div class="main-content" id="mainContent">
+<div class="main-content">
     <div class="container">
 
         <?php 
-            // Enable error reporting for debugging (remove in production)
-            mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+            // Get food_id from URL
+            $food_id = isset($_GET['food_id']) ? intval($_GET['food_id']) : 0;
             
-            //Check whether food id is set or not
-            if(isset($_GET['food_id']))
-            {
-                $food_id = mysqli_real_escape_string($conn, $_GET['food_id']);
-                $sql = "SELECT * FROM tbl_food WHERE id=$food_id";
+            // Debug: Show received food_id
+            echo '<div class="debug-info">';
+            echo '<strong>🔍 Debug Information:</strong><br>';
+            echo 'Food ID from URL: ' . ($food_id ? $food_id : 'Not set') . '<br>';
+            
+            if($food_id > 0) {
+                $sql = "SELECT * FROM tbl_food WHERE id = $food_id";
                 $res = mysqli_query($conn, $sql);
-                $count = mysqli_num_rows($res);
                 
-                if($count==1)
-                {
+                if($res && mysqli_num_rows($res) > 0) {
                     $row = mysqli_fetch_assoc($res);
                     $title = $row['title'];
                     $price = $row['price'];
                     $image_name = $row['image_name'];
-                }
-                else
-                {
-                    $_SESSION['order'] = "<div class='error text-center'>Food item not found.</div>";
-                    header('location:'.SITEURL);
+                    echo '✅ Food found: ' . $title . ' - $' . $price . '<br>';
+                } else {
+                    echo '❌ Food not found in database!<br>';
+                    $_SESSION['order_error'] = "Food item not found!";
+                    header('Location: ' . SITEURL);
                     exit();
                 }
-            }
-            else
-            {
-                header('location:'.SITEURL);
+            } else {
+                echo '❌ No food ID provided!<br>';
+                $_SESSION['order_error'] = "Invalid food selection!";
+                header('Location: ' . SITEURL);
                 exit();
             }
+            echo '</div>';
         ?>
 
-        <!-- Page Header -->
         <div class="page-header">
-            <h1>
-                <i class="fas fa-shopping-bag" style="color: #667eea; margin-right: 15px;"></i>
-                Complete Your Order
-            </h1>
+            <h1>Complete Your Order</h1>
             <p>You're just a few steps away from delicious food!</p>
         </div>
 
-        <!-- Order Form Container -->
+        <!-- Display error/success messages -->
+        <?php if(isset($_SESSION['order_error'])): ?>
+            <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i> <?php echo $_SESSION['order_error']; unset($_SESSION['order_error']); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if(isset($_SESSION['order_success'])): ?>
+            <div class="success-message">
+                <i class="fas fa-check-circle"></i> <?php echo $_SESSION['order_success']; unset($_SESSION['order_success']); ?>
+            </div>
+        <?php endif; ?>
+
         <div class="order-container">
             
-            <!-- Order Summary Section -->
+            <!-- Order Summary -->
             <div class="order-summary">
                 <div class="summary-title">
-                    <i class="fas fa-shopping-cart"></i>
-                    Order Summary
+                    <i class="fas fa-shopping-cart"></i> Order Summary
                 </div>
 
                 <div class="food-item-card">
                     <div class="food-image">
-                        <?php if($image_name != ""): ?>
+                        <?php if($image_name != "" && file_exists("../images/food/" . $image_name)): ?>
                             <img src="<?php echo SITEURL; ?>images/food/<?php echo $image_name; ?>" alt="<?php echo $title; ?>">
                         <?php else: ?>
                             <img src="https://via.placeholder.com/120x120?text=Food" alt="Food">
@@ -527,15 +372,12 @@
                     <div class="food-details">
                         <h3><?php echo $title; ?></h3>
                         <div class="food-price">
-                            $<?php echo $price; ?>
+                            $<?php echo number_format($price, 2); ?>
                             <small>per item</small>
                         </div>
                         
                         <div class="quantity-selector">
-                            <span class="quantity-label">
-                                <i class="fas fa-sort-amount-up"></i>
-                                Quantity:
-                            </span>
+                            <span class="quantity-label">Quantity:</span>
                             <div class="quantity-controls">
                                 <button type="button" class="qty-btn" onclick="decreaseQty()">−</button>
                                 <input type="number" class="qty-input" id="qty" value="1" min="1" readonly>
@@ -548,33 +390,19 @@
                 <div class="price-breakdown">
                     <div class="price-row">
                         <span>Subtotal:</span>
-                        <span id="subtotal">$<?php echo $price; ?></span>
-                    </div>
-                    <div class="price-row">
-                        <span>Delivery Fee:</span>
-                        <span>$2.99</span>
-                    </div>
-                    <div class="price-row">
-                        <span>Tax (10%):</span>
-                        <span id="tax">$<?php echo number_format($price * 0.1, 2); ?></span>
+                        <span id="subtotal">$<?php echo number_format($price, 2); ?></span>
                     </div>
                     <div class="price-row total">
                         <span>Total:</span>
-                        <span id="total">$<?php echo number_format($price * 1.1 + 2.99, 2); ?></span>
+                        <span id="total">$<?php echo number_format($price, 2); ?></span>
                     </div>
-                </div>
-
-                <div class="security-badge">
-                    <i class="fas fa-shield-alt"></i>
-                    <p>Your information is encrypted and secure.</p>
                 </div>
             </div>
 
-            <!-- Delivery Details Form -->
+            <!-- Delivery Form -->
             <div class="delivery-form">
                 <div class="form-title">
-                    <i class="fas fa-truck"></i>
-                    Delivery Details
+                    <i class="fas fa-truck"></i> Delivery Details
                 </div>
 
                 <form action="" method="POST" id="orderForm">
@@ -582,60 +410,45 @@
                     <input type="hidden" name="price" value="<?php echo $price; ?>">
                     <input type="hidden" name="qty" id="qty_hidden" value="1">
 
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>
-                                <i class="fas fa-user"></i>
-                                Full Name
-                            </label>
-                            <input type="text" name="full-name" class="form-control" placeholder="John Doe" required>
-                        </div>
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" name="full-name" class="form-control" placeholder="John Doe" required>
+                    </div>
 
-                        <div class="form-group">
-                            <label>
-                                <i class="fas fa-phone"></i>
-                                Phone Number
-                            </label>
-                            <input type="tel" name="contact" class="form-control" placeholder="+1 234 567 890" required>
-                        </div>
+                    <div class="form-group">
+                        <label>Phone Number *</label>
+                        <input type="tel" name="contact" class="form-control" placeholder="1234567890" required>
+                    </div>
 
-                        <div class="form-group full-width">
-                            <label>
-                                <i class="fas fa-envelope"></i>
-                                Email Address
-                            </label>
-                            <input type="email" name="email" class="form-control" placeholder="john@example.com" required>
-                        </div>
+                    <div class="form-group">
+                        <label>Email Address *</label>
+                        <input type="email" name="email" class="form-control" placeholder="john@example.com" required>
+                    </div>
 
-                        <div class="form-group full-width">
-                            <label>
-                                <i class="fas fa-map-marker-alt"></i>
-                                Delivery Address
-                            </label>
-                            <textarea name="address" class="form-control" placeholder="Street address, City, State, ZIP" required></textarea>
-                        </div>
+                    <div class="form-group">
+                        <label>Delivery Address *</label>
+                        <textarea name="address" class="form-control" rows="4" placeholder="Street address, City, State, ZIP" required></textarea>
                     </div>
 
                     <button type="submit" name="submit" class="confirm-btn" id="submitBtn">
-                        <i class="fas fa-check-circle"></i>
-                        Confirm Order
+                        <i class="fas fa-check-circle"></i> Confirm Order
                     </button>
                 </form>
             </div>
         </div>
 
         <?php 
-            // Check whether submit button is clicked or not
+            // Process order submission
             if(isset($_POST['submit']))
             {
-                // Get all the details from the form and escape them
+                echo '<div class="debug-info">';
+                echo '<strong>📝 Form Submitted:</strong><br>';
+                
+                // Get and sanitize form data
                 $food = mysqli_real_escape_string($conn, $_POST['food']);
                 $price = floatval($_POST['price']);
                 $qty = intval($_POST['qty']);
-                
-                // Calculate total (without delivery and tax as per original schema)
                 $total = $price * $qty;
-                
                 $order_date = date("Y-m-d H:i:s");
                 $status = "Ordered";
                 $customer_name = mysqli_real_escape_string($conn, $_POST['full-name']);
@@ -643,40 +456,85 @@
                 $customer_email = mysqli_real_escape_string($conn, $_POST['email']);
                 $customer_address = mysqli_real_escape_string($conn, $_POST['address']);
 
-                // Create SQL to save the data - using the correct column names from your database
-                $sql2 = "INSERT INTO tbl_order SET 
-                    food = '$food',
-                    price = $price,
-                    qty = $qty,
-                    total = $total,
-                    order_date = '$order_date',
-                    status = '$status',
-                    customer_name = '$customer_name',
-                    customer_contact = '$customer_contact',
-                    customer_email = '$customer_email',
-                    customer_address = '$customer_address'
-                ";
+                echo 'Food: ' . $food . '<br>';
+                echo 'Price: ' . $price . '<br>';
+                echo 'Quantity: ' . $qty . '<br>';
+                echo 'Total: ' . $total . '<br>';
+                echo 'Order Date: ' . $order_date . '<br>';
+                echo 'Customer Name: ' . $customer_name . '<br>';
+                echo 'Customer Contact: ' . $customer_contact . '<br>';
+                echo 'Customer Email: ' . $customer_email . '<br>';
+                echo 'Customer Address: ' . $customer_address . '<br>';
+                echo '<hr>';
 
+                // Check if all required fields are filled
+                if(empty($customer_name) || empty($customer_contact) || empty($customer_email) || empty($customer_address)) {
+                    echo '❌ Missing required fields!<br>';
+                    $_SESSION['order_error'] = "Please fill in all required fields!";
+                    header('Location: ' . $_SERVER['PHP_SELF'] . '?food_id=' . $food_id);
+                    exit();
+                }
+
+                // Create the INSERT query
+                $sql2 = "INSERT INTO tbl_order (food, price, qty, total, order_date, status, customer_name, customer_contact, customer_email, customer_address) 
+                         VALUES ('$food', $price, $qty, $total, '$order_date', '$status', '$customer_name', '$customer_contact', '$customer_email', '$customer_address')";
+                
+                echo '<strong>SQL Query:</strong><br>';
+                echo '<pre>' . htmlspecialchars($sql2) . '</pre><br>';
+                
                 // Execute the Query
                 $res2 = mysqli_query($conn, $sql2);
 
-                // Check whether query executed successfully or not
-                if($res2 == true)
-                {
-                    // Query Executed and Order Saved
-                    $_SESSION['order'] = "Order placed successfully! Your food will be delivered soon.";
-                    header('location:'.SITEURL);
+                if($res2) {
+                    $order_id = mysqli_insert_id($conn);
+                    echo '✅ Order inserted successfully! Order ID: ' . $order_id . '<br>';
+                    
+                    $_SESSION['order_success'] = "Order placed successfully! Order #" . str_pad($order_id, 4, '0', STR_PAD_LEFT);
+                    header('Location: ' . $_SERVER['PHP_SELF'] . '?food_id=' . $food_id . '&success=1');
+                    exit();
+                } else {
+                    echo '❌ Database Error: ' . mysqli_error($conn) . '<br>';
+                    $_SESSION['order_error'] = "Database error: " . mysqli_error($conn);
+                    header('Location: ' . $_SERVER['PHP_SELF'] . '?food_id=' . $food_id);
                     exit();
                 }
-                else
-                {
-                    // Get the error message
-                    $error = mysqli_error($conn);
-                    // Failed to Save Order
-                    $_SESSION['order'] = "Failed to place order. Error: " . $error;
-                    header('location:'.SITEURL);
-                    exit();
-                }
+                echo '</div>';
+            }
+            
+            // Display success modal if order was just placed
+            if(isset($_GET['success']) && isset($_SESSION['order_success'])) {
+                ?>
+                <div class="success-overlay" id="successModal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+                    <div class="success-alert" style="background: white; border-radius: 24px; padding: 40px; text-align: center; max-width: 450px; width: 90%;">
+                        <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px;">
+                            <i class="fas fa-check-circle" style="font-size: 50px; color: white;"></i>
+                        </div>
+                        <h2 style="font-size: 28px; color: #333; margin-bottom: 15px;">Order Confirmed! 🎉</h2>
+                        <p style="color: #666; font-size: 16px; margin-bottom: 20px;"><?php echo $_SESSION['order_success']; ?></p>
+                        <div class="redirect-timer" style="margin-top: 20px;">
+                            <i class="fas fa-clock"></i> Redirecting to your orders in <span id="countdown" style="color: #667eea; font-weight: 600;">5</span> seconds
+                        </div>
+                        <a href="<?php echo SITEURL; ?>my-orders.php" class="btn-view-orders" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; border-radius: 30px; text-decoration: none; margin-top: 20px;">
+                            <i class="fas fa-clipboard-list"></i> View My Orders
+                        </a>
+                    </div>
+                </div>
+                
+                <script>
+                    let seconds = 5;
+                    const countdownElement = document.getElementById('countdown');
+                    
+                    const timer = setInterval(() => {
+                        seconds--;
+                        if(countdownElement) countdownElement.textContent = seconds;
+                        if(seconds <= 0) {
+                            clearInterval(timer);
+                            window.location.href = '<?php echo SITEURL; ?>my-orders.php';
+                        }
+                    }, 1000);
+                </script>
+                <?php
+                unset($_SESSION['order_success']);
             }
         ?>
 
@@ -684,7 +542,6 @@
 </div>
 
 <script>
-    // Quantity control functions
     function increaseQty() {
         let qtyInput = document.getElementById('qty');
         let currentQty = parseInt(qtyInput.value);
@@ -707,59 +564,13 @@
         let qty = parseInt(document.getElementById('qty').value);
         let pricePerItem = <?php echo $price; ?>;
         let subtotal = qty * pricePerItem;
-        let tax = subtotal * 0.1;
-        let delivery = 2.99;
-        let total = subtotal + tax + delivery;
-
+        
         document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2);
-        document.getElementById('tax').textContent = '$' + tax.toFixed(2);
-        document.getElementById('total').textContent = '$' + total.toFixed(2);
+        document.getElementById('total').textContent = '$' + subtotal.toFixed(2);
     }
-
-    // Form submission loading state
-    document.getElementById('orderForm').addEventListener('submit', function(e) {
-        let submitBtn = document.getElementById('submitBtn');
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-        submitBtn.classList.add('btn-loading');
-        submitBtn.disabled = true;
-    });
-
-    // Auto-format phone number
-    document.querySelector('input[name="contact"]').addEventListener('input', function(e) {
-        let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-    });
-
-    // Validate form before submit
-    document.getElementById('orderForm').addEventListener('submit', function(e) {
-        let email = document.querySelector('input[name="email"]').value;
-        let phone = document.querySelector('input[name="contact"]').value;
-        let name = document.querySelector('input[name="full-name"]').value;
-        
-        if(name.length < 3) {
-            e.preventDefault();
-            alert('Please enter your full name');
-            return;
-        }
-        
-        if(phone.replace(/\D/g, '').length < 10) {
-            e.preventDefault();
-            alert('Please enter a valid phone number');
-            return;
-        }
-        
-        if(!email.includes('@') || !email.includes('.')) {
-            e.preventDefault();
-            alert('Please enter a valid email address');
-            return;
-        }
-    });
-
-    // Add animation on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelector('.order-summary').style.opacity = '1';
-        document.querySelector('.delivery-form').style.opacity = '1';
-    });
 </script>
 
-<?php include('partials-front/footer.php'); ?>
+<?php 
+include('partials-front/footer.php');
+ob_end_flush();
+?>

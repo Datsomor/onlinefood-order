@@ -1,4 +1,7 @@
-<?php include('partials-front/menu.php'); ?>
+<?php 
+ob_start();
+include('partials-front/menu.php'); 
+?>
 
 <style>
     /* Main Content Area Adjustments */
@@ -14,7 +17,6 @@
         margin-left: 80px;
     }
 
-    /* Container Adjustments */
     .container {
         max-width: 1200px;
         margin: 0 auto;
@@ -53,6 +55,96 @@
         font-size: 18px;
         max-width: 600px;
         margin: 0 auto;
+    }
+
+    /* Lookup Form */
+    .lookup-section {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        margin-bottom: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        animation: slideDown 0.6s ease;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .lookup-title {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .lookup-title h2 {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .lookup-title p {
+        color: #666;
+        font-size: 14px;
+    }
+
+    .lookup-form {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .lookup-group {
+        margin-bottom: 20px;
+    }
+
+    .lookup-group label {
+        display: block;
+        color: #333;
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+
+    .lookup-input {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 16px;
+        transition: 0.3s;
+    }
+
+    .lookup-input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+
+    .lookup-btn {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .lookup-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
     }
 
     /* Stats Cards */
@@ -159,10 +251,6 @@
         color: white;
     }
 
-    .filter-tab i {
-        font-size: 14px;
-    }
-
     .search-box {
         display: flex;
         align-items: center;
@@ -187,11 +275,6 @@
         padding: 8px 20px;
         border-radius: 30px;
         cursor: pointer;
-        transition: 0.3s;
-    }
-
-    .search-box button:hover {
-        transform: scale(1.05);
     }
 
     /* Orders Grid */
@@ -208,7 +291,6 @@
         overflow: hidden;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
         transition: 0.3s;
-        position: relative;
         animation: fadeInUp 0.6s ease;
     }
 
@@ -243,10 +325,6 @@
         display: flex;
         align-items: center;
         gap: 8px;
-    }
-
-    .order-id i {
-        font-size: 20px;
     }
 
     .order-date {
@@ -340,7 +418,6 @@
         font-weight: 600;
     }
 
-    /* Status Badges */
     .status-badge {
         display: inline-flex;
         align-items: center;
@@ -381,15 +458,10 @@
         margin-top: 15px;
     }
 
-    .total-label {
-        color: #666;
-        font-size: 14px;
-    }
-
     .total-amount {
         font-size: 24px;
         font-weight: 700;
-        color: #333;
+        color: #667eea;
     }
 
     .order-actions {
@@ -434,69 +506,6 @@
         transform: translateY(-2px);
     }
 
-    /* Timeline */
-    .order-timeline {
-        padding: 20px;
-        background: #f8f9ff;
-        border-radius: 15px;
-        margin: 20px 0;
-    }
-
-    .timeline-item {
-        display: flex;
-        gap: 15px;
-        position: relative;
-        padding-bottom: 20px;
-    }
-
-    .timeline-item:last-child {
-        padding-bottom: 0;
-    }
-
-    .timeline-item:not(:last-child)::before {
-        content: '';
-        position: absolute;
-        left: 17px;
-        top: 30px;
-        bottom: 0;
-        width: 2px;
-        background: #e0e0e0;
-    }
-
-    .timeline-dot {
-        width: 35px;
-        height: 35px;
-        background: white;
-        border: 2px solid #667eea;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #667eea;
-        font-size: 14px;
-        z-index: 1;
-    }
-
-    .timeline-dot.completed {
-        background: #667eea;
-        color: white;
-    }
-
-    .timeline-content {
-        flex: 1;
-    }
-
-    .timeline-content h4 {
-        font-size: 16px;
-        color: #333;
-        margin-bottom: 5px;
-    }
-
-    .timeline-content p {
-        color: #666;
-        font-size: 13px;
-    }
-
     /* Empty State */
     .empty-state {
         text-align: center;
@@ -504,6 +513,7 @@
         background: white;
         border-radius: 20px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        grid-column: 1 / -1;
     }
 
     .empty-state-icon {
@@ -552,121 +562,55 @@
         box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
     }
 
-    /* Pagination */
-    .pagination {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin-top: 40px;
-    }
-
-    .page-item {
-        list-style: none;
-    }
-
-    .page-link {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        background: white;
-        color: #333;
+    .clear-search {
+        color: #667eea;
         text-decoration: none;
-        transition: 0.3s;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 15px;
     }
 
-    .page-link:hover,
-    .page-item.active .page-link {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+    .clear-search:hover {
+        text-decoration: underline;
     }
 
-    /* Responsive Design */
-    @media (max-width: 768px) {
+    @media (max-width: 992px) {
         .main-content {
             margin-left: 0;
         }
+    }
 
+    @media (max-width: 768px) {
         .page-header h1 {
             font-size: 32px;
         }
-
+        .lookup-section {
+            padding: 25px;
+        }
         .stats-grid {
             grid-template-columns: 1fr;
         }
-
         .filter-section {
             flex-direction: column;
             align-items: stretch;
         }
-
         .search-box {
             width: 100%;
         }
-
-        .search-box input {
-            width: 100%;
-        }
-
         .orders-grid {
             grid-template-columns: 1fr;
         }
-
         .order-details {
             grid-template-columns: 1fr;
         }
     }
-
-    /* Loading Skeleton */
-    .skeleton {
-        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-        background-size: 200% 100%;
-        animation: loading 1.5s infinite;
-        border-radius: 10px;
-    }
-
-    @keyframes loading {
-        0% { background-position: 200% 0; }
-        100% { background-position: -200% 0; }
-    }
-
-    /* Tooltip */
-    .tooltip {
-        position: relative;
-        display: inline-block;
-    }
-
-    .tooltip .tooltiptext {
-        visibility: hidden;
-        width: 120px;
-        background-color: #333;
-        color: #fff;
-        text-align: center;
-        border-radius: 6px;
-        padding: 5px;
-        position: absolute;
-        z-index: 1;
-        bottom: 125%;
-        left: 50%;
-        margin-left: -60px;
-        opacity: 0;
-        transition: opacity 0.3s;
-        font-size: 12px;
-    }
-
-    .tooltip:hover .tooltiptext {
-        visibility: visible;
-        opacity: 1;
-    }
 </style>
 
-<div class="main-content" id="mainContent">
+<div class="main-content">
     <div class="container">
 
-        <!-- Page Header -->
         <div class="page-header">
             <h1>
                 <i class="fas fa-clipboard-list" style="color: #667eea; margin-right: 15px;"></i>
@@ -676,24 +620,82 @@
         </div>
 
         <?php
-        // Get customer email from session (you need to implement login system)
-        // For demo, we'll use a sample email
-        $customer_email = isset($_SESSION['customer_email']) ? $_SESSION['customer_email'] : 'john@example.com';
+        // Handle order lookup
+        $customer_identifier = '';
+        $lookup_performed = false;
         
-        // Statistics Queries
-        $sql_total = "SELECT COUNT(*) as total, SUM(total) as total_spent FROM tbl_order WHERE customer_email='$customer_email'";
-        $res_total = mysqli_query($conn, $sql_total);
-        $row_total = mysqli_fetch_assoc($res_total);
+        if(isset($_POST['lookup_email']) || isset($_GET['email'])) {
+            $lookup_performed = true;
+            if(isset($_POST['lookup_email'])) {
+                $customer_identifier = mysqli_real_escape_string($conn, $_POST['lookup_email']);
+                $_SESSION['order_lookup_email'] = $customer_identifier;
+            } elseif(isset($_GET['email'])) {
+                $customer_identifier = mysqli_real_escape_string($conn, $_GET['email']);
+                $_SESSION['order_lookup_email'] = $customer_identifier;
+            } elseif(isset($_SESSION['order_lookup_email'])) {
+                $customer_identifier = $_SESSION['order_lookup_email'];
+            }
+        } elseif(isset($_SESSION['order_lookup_email']) && !isset($_POST['clear'])) {
+            $customer_identifier = $_SESSION['order_lookup_email'];
+            $lookup_performed = true;
+        }
         
-        $sql_pending = "SELECT COUNT(*) as pending FROM tbl_order WHERE customer_email='$customer_email' AND status='Ordered'";
-        $res_pending = mysqli_query($conn, $sql_pending);
-        $row_pending = mysqli_fetch_assoc($res_pending);
-        
-        $sql_delivered = "SELECT COUNT(*) as delivered FROM tbl_order WHERE customer_email='$customer_email' AND status='Delivered'";
-        $res_delivered = mysqli_query($conn, $sql_delivered);
-        $row_delivered = mysqli_fetch_assoc($res_delivered);
+        // Clear lookup
+        if(isset($_POST['clear'])) {
+            unset($_SESSION['order_lookup_email']);
+            $customer_identifier = '';
+            $lookup_performed = false;
+        }
         ?>
 
+        <!-- Order Lookup Form -->
+        <div class="lookup-section">
+            <div class="lookup-title">
+                <h2>Find Your Orders</h2>
+                <p>Enter your email address or phone number to view your order history</p>
+            </div>
+            
+            <form method="POST" class="lookup-form">
+                <div class="lookup-group">
+                    <label><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" name="lookup_email" class="lookup-input" 
+                           placeholder="Enter the email you used for ordering" 
+                           value="<?php echo htmlspecialchars($customer_identifier); ?>" required>
+                </div>
+                <button type="submit" class="lookup-btn">
+                    <i class="fas fa-search"></i> Find My Orders
+                </button>
+                
+                <?php if($lookup_performed && !empty($customer_identifier)): ?>
+                <div style="text-align: center; margin-top: 15px;">
+                    <form method="POST" style="display: inline;">
+                        <button type="submit" name="clear" class="clear-search">
+                            <i class="fas fa-times-circle"></i> Clear and Search Again
+                        </button>
+                    </form>
+                </div>
+                <?php endif; ?>
+            </form>
+        </div>
+
+        <?php if($lookup_performed && !empty($customer_identifier)): 
+            // Get orders for this customer (by email)
+            $sql_total = "SELECT COUNT(*) as total, SUM(total) as total_spent FROM tbl_order WHERE customer_email='$customer_identifier'";
+            $res_total = mysqli_query($conn, $sql_total);
+            $row_total = mysqli_fetch_assoc($res_total);
+            
+            $sql_pending = "SELECT COUNT(*) as pending FROM tbl_order WHERE customer_email='$customer_identifier' AND status='Ordered'";
+            $res_pending = mysqli_query($conn, $sql_pending);
+            $row_pending = mysqli_fetch_assoc($res_pending);
+            
+            $sql_delivered = "SELECT COUNT(*) as delivered FROM tbl_order WHERE customer_email='$customer_identifier' AND status='Delivered'";
+            $res_delivered = mysqli_query($conn, $sql_delivered);
+            $row_delivered = mysqli_fetch_assoc($res_delivered);
+            
+            $total_orders = $row_total['total'] ?? 0;
+        ?>
+
+        <?php if($total_orders > 0): ?>
         <!-- Statistics Cards -->
         <div class="stats-grid">
             <div class="stat-card">
@@ -701,7 +703,7 @@
                     <i class="fas fa-shopping-bag"></i>
                 </div>
                 <div class="stat-info">
-                    <h3><?php echo $row_total['total'] ?? 0; ?></h3>
+                    <h3><?php echo $total_orders; ?></h3>
                     <p>Total Orders</p>
                 </div>
             </div>
@@ -740,29 +742,25 @@
         <!-- Filter Section -->
         <div class="filter-section">
             <div class="filter-tabs">
-                <a href="?status=all" class="filter-tab <?php echo (!isset($_GET['status']) || $_GET['status'] == 'all') ? 'active' : ''; ?>">
-                    <i class="fas fa-list"></i>
-                    All Orders
+                <a href="?email=<?php echo urlencode($customer_identifier); ?>&status=all" class="filter-tab <?php echo (!isset($_GET['status']) || $_GET['status'] == 'all') ? 'active' : ''; ?>">
+                    <i class="fas fa-list"></i> All Orders
                 </a>
-                <a href="?status=ordered" class="filter-tab <?php echo (isset($_GET['status']) && $_GET['status'] == 'ordered') ? 'active' : ''; ?>">
-                    <i class="fas fa-clock"></i>
-                    Pending
+                <a href="?email=<?php echo urlencode($customer_identifier); ?>&status=ordered" class="filter-tab <?php echo (isset($_GET['status']) && $_GET['status'] == 'ordered') ? 'active' : ''; ?>">
+                    <i class="fas fa-clock"></i> Pending
                 </a>
-                <a href="?status=ondelivery" class="filter-tab <?php echo (isset($_GET['status']) && $_GET['status'] == 'ondelivery') ? 'active' : ''; ?>">
-                    <i class="fas fa-truck"></i>
-                    On Delivery
+                <a href="?email=<?php echo urlencode($customer_identifier); ?>&status=ondelivery" class="filter-tab <?php echo (isset($_GET['status']) && $_GET['status'] == 'ondelivery') ? 'active' : ''; ?>">
+                    <i class="fas fa-truck"></i> On Delivery
                 </a>
-                <a href="?status=delivered" class="filter-tab <?php echo (isset($_GET['status']) && $_GET['status'] == 'delivered') ? 'active' : ''; ?>">
-                    <i class="fas fa-check-circle"></i>
-                    Delivered
+                <a href="?email=<?php echo urlencode($customer_identifier); ?>&status=delivered" class="filter-tab <?php echo (isset($_GET['status']) && $_GET['status'] == 'delivered') ? 'active' : ''; ?>">
+                    <i class="fas fa-check-circle"></i> Delivered
                 </a>
-                <a href="?status=cancelled" class="filter-tab <?php echo (isset($_GET['status']) && $_GET['status'] == 'cancelled') ? 'active' : ''; ?>">
-                    <i class="fas fa-times-circle"></i>
-                    Cancelled
+                <a href="?email=<?php echo urlencode($customer_identifier); ?>&status=cancelled" class="filter-tab <?php echo (isset($_GET['status']) && $_GET['status'] == 'cancelled') ? 'active' : ''; ?>">
+                    <i class="fas fa-times-circle"></i> Cancelled
                 </a>
             </div>
             
             <form method="GET" class="search-box">
+                <input type="hidden" name="email" value="<?php echo htmlspecialchars($customer_identifier); ?>">
                 <input type="text" name="search" placeholder="Search by food or order ID..." value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
                 <button type="submit"><i class="fas fa-search"></i></button>
             </form>
@@ -771,8 +769,8 @@
         <!-- Orders Grid -->
         <div class="orders-grid">
             <?php
-            // Build SQL query based on filters
-            $sql = "SELECT * FROM tbl_order WHERE customer_email='$customer_email'";
+            // Build SQL query
+            $sql = "SELECT * FROM tbl_order WHERE customer_email='$customer_identifier'";
             
             if(isset($_GET['status']) && $_GET['status'] != 'all') {
                 $status = mysqli_real_escape_string($conn, $_GET['status']);
@@ -807,18 +805,15 @@
                     $status = $row['status'];
                     $customer_address = $row['customer_address'];
                     
-                    // Format date
                     $date = new DateTime($order_date);
                     $formatted_date = $date->format('M d, Y');
                     $formatted_time = $date->format('h:i A');
                     
-                    // Get food image
                     $sql_img = "SELECT image_name FROM tbl_food WHERE title='$food' LIMIT 1";
                     $res_img = mysqli_query($conn, $sql_img);
                     $row_img = mysqli_fetch_assoc($res_img);
                     $image_name = $row_img['image_name'] ?? '';
                     
-                    // Determine status class
                     $status_class = '';
                     $status_icon = '';
                     switch($status) {
@@ -896,23 +891,13 @@
                     </div>
 
                     <div class="order-total">
-                        <span class="total-label">Total Amount</span>
+                        <span>Total Amount:</span>
                         <span class="total-amount">$<?php echo number_format($total, 2); ?></span>
                     </div>
 
                     <div class="order-actions">
-                        <?php if($status != 'Delivered' && $status != 'Cancelled'): ?>
-                        <a href="track-order.php?id=<?php echo $id; ?>" class="btn-action btn-track tooltip">
-                            <i class="fas fa-map-marker-alt"></i>
-                            Track Order
-                            <span class="tooltiptext">Track your delivery</span>
-                        </a>
-                        <?php endif; ?>
-                        
-                        <a href="order.php?food_id=<?php echo $id; ?>" class="btn-action btn-reorder tooltip">
-                            <i class="fas fa-redo-alt"></i>
-                            Reorder
-                            <span class="tooltiptext">Order again</span>
+                        <a href="order.php?food_id=<?php echo $id; ?>" class="btn-action btn-reorder">
+                            <i class="fas fa-redo-alt"></i> Reorder
                         </a>
                     </div>
                 </div>
@@ -922,60 +907,40 @@
                 }
             } else {
             ?>
-            <!-- Empty State -->
-            <div class="empty-state" style="grid-column: 1 / -1;">
+            <div class="empty-state">
                 <div class="empty-state-icon">
-                    <i class="fas fa-shopping-bag"></i>
+                    <i class="fas fa-search"></i>
                 </div>
-                <h2>No Orders Yet</h2>
-                <p>Looks like you haven't placed any orders yet. Start exploring our delicious menu!</p>
+                <h2>No Orders Found</h2>
+                <p>We couldn't find any orders for <?php echo htmlspecialchars($customer_identifier); ?></p>
                 <a href="<?php echo SITEURL; ?>" class="btn-explore">
-                    <i class="fas fa-utensils"></i>
-                    Explore Menu
+                    <i class="fas fa-utensils"></i> Start Ordering
                 </a>
             </div>
             <?php } ?>
         </div>
 
-        <?php if($count > 0): ?>
-        <!-- Pagination -->
-        <div class="pagination">
-            <ul style="display: flex; gap: 10px; list-style: none;">
-                <li class="page-item"><a href="#" class="page-link"><i class="fas fa-chevron-left"></i></a></li>
-                <li class="page-item active"><a href="#" class="page-link">1</a></li>
-                <li class="page-item"><a href="#" class="page-link">2</a></li>
-                <li class="page-item"><a href="#" class="page-link">3</a></li>
-                <li class="page-item"><a href="#" class="page-link"><i class="fas fa-chevron-right"></i></a></li>
-            </ul>
+        <?php else: ?>
+        <!-- No orders for this email -->
+        <div class="empty-state" style="margin-top: 20px;">
+            <div class="empty-state-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <h2>No Orders Found</h2>
+            <p>We couldn't find any orders for <?php echo htmlspecialchars($customer_identifier); ?></p>
+            <a href="<?php echo SITEURL; ?>" class="btn-explore">
+                <i class="fas fa-utensils"></i> Start Ordering
+            </a>
         </div>
         <?php endif; ?>
 
-        <!-- Recent Activity Timeline (Optional) -->
-        <?php if($count > 0): ?>
-        <div style="margin-top: 60px;">
-            <h3 style="color: #333; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-history" style="color: #667eea;"></i>
-                Recent Activity
-            </h3>
-            <div class="order-timeline">
-                <?php
-                $sql_recent = "SELECT * FROM tbl_order WHERE customer_email='$customer_email' ORDER BY id DESC LIMIT 3";
-                $res_recent = mysqli_query($conn, $sql_recent);
-                while($row = mysqli_fetch_assoc($res_recent)) {
-                    $date = new DateTime($row['order_date']);
-                ?>
-                <div class="timeline-item">
-                    <div class="timeline-dot <?php echo ($row['status'] == 'Delivered') ? 'completed' : ''; ?>">
-                        <i class="fas <?php echo ($row['status'] == 'Delivered') ? 'fa-check' : 'fa-clock'; ?>"></i>
-                    </div>
-                    <div class="timeline-content">
-                        <h4>Order #<?php echo str_pad($row['id'], 4, '0', STR_PAD_LEFT); ?></h4>
-                        <p><?php echo $row['food']; ?> - $<?php echo $row['total']; ?></p>
-                        <p style="color: #999; font-size: 12px;"><?php echo $date->format('M d, Y h:i A'); ?></p>
-                    </div>
-                </div>
-                <?php } ?>
+        <?php elseif($lookup_performed && empty($customer_identifier)): ?>
+        <div class="empty-state" style="margin-top: 20px;">
+            <div class="empty-state-icon">
+                <i class="fas fa-envelope"></i>
             </div>
+            <h2>Enter Your Email</h2>
+            <p>Please enter your email address to view your orders</p>
         </div>
         <?php endif; ?>
 
@@ -985,39 +950,17 @@
 <script>
     // Search functionality with debounce
     let searchTimeout;
-    document.querySelector('.search-box input').addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            this.closest('form').submit();
-        }, 500);
-    });
-
-    // Add loading skeleton effect
-    document.querySelectorAll('.order-card').forEach(card => {
-        card.classList.add('skeleton');
-        setTimeout(() => {
-            card.classList.remove('skeleton');
-        }, 1000);
-    });
-
-    // Tooltip initialization
-    document.querySelectorAll('.tooltip').forEach(element => {
-        element.addEventListener('mouseenter', function(e) {
-            const tooltip = this.querySelector('.tooltiptext');
-            if(tooltip) {
-                tooltip.style.visibility = 'visible';
-                tooltip.style.opacity = '1';
-            }
+    const searchInput = document.querySelector('.search-box input');
+    if(searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                this.closest('form').submit();
+            }, 500);
         });
-        
-        element.addEventListener('mouseleave', function(e) {
-            const tooltip = this.querySelector('.tooltiptext');
-            if(tooltip) {
-                tooltip.style.visibility = 'hidden';
-                tooltip.style.opacity = '0';
-            }
-        });
-    });
+    }
 </script>
 
-<?php include('partials-front/footer.php'); ?>
+<?php include('partials-front/footer.php'); 
+ob_end_flush();
+?>
