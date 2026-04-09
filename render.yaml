@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: food-order-system
+    runtime: image
+    repo: https://github.com/YOUR_USERNAME/YOUR_REPO_NAME
+    plan: free
+    envVars:
+      - key: DB_HOST
+        fromDatabase:
+          name: food-order-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: food-order-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: food-order-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: food-order-db
+          property: user
+      - key: DB_PASS
+        fromDatabase:
+          name: food-order-db
+          property: password
+      - key: SITE_URL
+        value: https://your-app-name.onrender.com/
+    buildCommand: |
+      docker build -t food-order-system .
+    startCommand: |
+      docker run -p 10000:80 food-order-system
+
+  - type: pgsql
+    name: food-order-db
+    plan: free
+    databaseName: onlinefoodorder
+    postgresMajorVersion: 15

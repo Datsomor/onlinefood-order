@@ -1,0 +1,43 @@
+# Environment files
+.env
+.env.local
+.env.production
+
+# Database files
+*.sql
+*.sql.gz
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+error_log
+
+# Uploaded images
+images/category/*.jpg
+images/category/*.png
+images/category/*.jpeg
+images/category/*.gif
+images/food/*.jpg
+images/food/*.png
+images/food/*.jpeg
+images/food/*.gif
+
+# Backup files
+*.bak
+*.backup
+
+# Temporary files
+tmp/
+temp/
+
+# Docker
+docker-compose.override.yml
