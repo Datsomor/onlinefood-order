@@ -3,14 +3,14 @@
 session_start();
 
 // PostgreSQL Database Connection Constants
-define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_HOST', getenv('DB_HOST') ?: 'dpg-d7c1vh9o3t8c73csk44g-a');
 define('DB_PORT', getenv('DB_PORT') ?: '5432');
-define('DB_NAME', getenv('DB_NAME') ?: 'onlinefoodorder');
-define('DB_USER', getenv('DB_USER') ?: 'postgres');
-define('DB_PASS', getenv('DB_PASS') ?: '');
+define('DB_NAME', getenv('DB_NAME') ?: 'onlinefoodorder_sql');
+define('DB_USER', getenv('DB_USER') ?: 'onlinefoodorder_sql_user');
+define('DB_PASS', getenv('DB_PASS') ?: 'eKk4ei2LWgf3AnvxoS3OzEnnaVWtdwx7');
 
 // Site URL - Update this for production
-$site_url = getenv('SITE_URL') ?: 'http://localhost/onlinefoodorder/';
+$site_url = getenv('SITE_URL') ?: 'postgresql://onlinefoodorder_sql_user:eKk4ei2LWgf3AnvxoS3OzEnnaVWtdwx7@dpg-d7c1vh9o3t8c73csk44g-a.oregon-postgres.render.com/onlinefoodorder_sql;
 define('SITEURL', $site_url);
 
 // PostgreSQL Connection Function
